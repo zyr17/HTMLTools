@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Aigis经验计算器</title>
+	<meta name="viewport" content="width=530">
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+	<link rel="stylesheet" href="http://t.zyr17.cn/js/material.icon.css">
+	<link rel="stylesheet" href="http://t.zyr17.cn/js/material.indigo-pink.min.css">
+	<script defer src="http://t.zyr17.cn/js/material.min.js"></script>
+    <script src="http://libs.baidu.com/jquery/2.1.1/jquery.min.js"></script>    
+    <style> 
+		body {
+			font-size:24px;
+		}
+        * {  
+            margin: 0;   
+            padding: 0;  
+        }    
+        .ctn {  
+            border: 1px solid #bfbfbf;  
+            padding: 10px;  
+            margin-bottom: 10px;  
+        }  
+        .bold {  
+            background: #fdd6d6;  
+        }  
+		.mdl-radio {
+			font-size:24px;
+		}
+		input {
+			height: 24px;
+			font-size: 24px;
+		}
+    </style>    
+</head>    
+<body>  
+<div class="mdl-grid">
+<div class="mdl-cell--3-col mdl-cell--1-col-tablet"></div>
+<div class="mdl-cell--6-col">
+	<table style="width: 100%">
+		<tr>
+			<td>
+				<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-1">
+				  <input type="radio" id="option-1" class="mdl-radio__button" name="rare" value="1" checked>
+				  <span class="mdl-radio__label">铁</span>
+				</label>
+			</td>
+			<td>
+				<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-2">
+				  <input type="radio" id="option-2" class="mdl-radio__button" name="rare" value="2" checked>
+				  <span class="mdl-radio__label">铜</span>
+				</label>
+			</td>
+			<td>
+				<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-3">
+				  <input type="radio" id="option-3" class="mdl-radio__button" name="rare" value="3" checked>
+				  <span class="mdl-radio__label">银</span>
+				</label>
+			</td>
+			<td>
+				<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-4">
+				  <input type="radio" id="option-4" class="mdl-radio__button" name="rare" value="4" checked>
+				  <span class="mdl-radio__label">金</span>
+				</label>
+			</td>
+			<td>
+				<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-5">
+				  <input type="radio" id="option-5" class="mdl-radio__button" name="rare" value="5" checked>
+				  <span class="mdl-radio__label">白</span>
+				</label>
+			</td>
+			<td>
+				<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-6">
+				  <input type="radio" id="option-6" class="mdl-radio__button" name="rare" value="6" checked>
+				  <span class="mdl-radio__label">黑</span>
+				</label>
+			</td>
+		</tr>
+	</table>
+	
+	<div class="mdl-grid">
+		<div style="width: 50%">
+			现在等级<br><br>
+			<input type="text" id="NowLV" value=1 style="width: 90%"/>
+		</div>
+		<div style="width: 50%">
+			现在经验*<br><br>
+			<input type="text" id="NowEXP" style="width: 90%"/>
+		</div>
+	</div>
+	<div class="mdl-grid">
+		<div style="width: 50%">
+			目标等级<br><br>
+			<input type="text" id="ToLV" value=99 style="width: 90%"/>
+		</div>
+		<div style="width: 50%">
+			目标经验*<br><br>
+			<input type="text" id="ToEXP" style="width: 90%"/>
+		</div>
+	</div>
+	<div class="mdl-grid">
+		<div style="width: 100%">
+			一次狗粮经验<br><br>
+			<input type="text" id="FeedEXP" value=8800 style="width: 95%"/>
+		</div>
+	</div><br>
+	所需经验：<span id="NeedEXP"></span><br><br>
+	狗粮组数：<span id="NeedFeed"></span><br><br>
+	剩余经验：<span id="RemainEXP"></span><br><br>
+    预计花费金钱**：<span id="GoldCost"></span><br><br>
+    <div class="mdl-grid" style="font-size: 16px">
+        *指距离下一级还需要的经验。若留空指正好达到现在/目标等级，到下一级还需要完整的经验<br><br>
+        **以喂一次狗粮同时喂四个单位计算，不考虑经验溢出，喂到达到或超过目标经验为止
+    </div>
+</div>
+<div class="mdl-cell--3-col"></div>
+</div>
+</body>    
+<script type="text/javascript">    
+    
+	N = 111;
+	
+	rare = 6;
+
+	$("input:radio[name='rare']").change(function (){rare = parseInt($(this).val()); calcmain();});
+	$('input:text').on('keyup', function () {
+		calcmain();
+	})
+	
+	map = [];
+	sum = [];
+	
+	$(document).ready( () =>
+        {
+			
+            map[1 * N + 1] = 32;
+            map[2 * N + 1] = 35;
+            map[3 * N + 1] = 38;
+            map[4 * N + 1] = 42;
+            map[5 * N + 1] = 45;
+            map[6 * N + 1] = 48;
+            map[1 * N + 2] = 33;
+            map[2 * N + 2] = 37;
+            map[3 * N + 2] = 40;
+            map[4 * N + 2] = 43;
+            map[5 * N + 2] = 46;
+            map[6 * N + 2] = 50;
+            map[1 * N + 3] = 35;
+            map[2 * N + 3] = 38;
+            map[3 * N + 3] = 42;
+            map[4 * N + 3] = 45;
+            map[5 * N + 3] = 49;
+            map[6 * N + 3] = 52;
+            map[1 * N + 4] = 35;
+            map[2 * N + 4] = 39;
+            map[3 * N + 4] = 42;
+            map[4 * N + 4] = 46;
+            map[5 * N + 4] = 49;
+            map[6 * N + 4] = 53;
+            map[1 * N + 5] = 37;
+            map[2 * N + 5] = 40;
+            map[3 * N + 5] = 44;
+            map[4 * N + 5] = 48;
+            map[5 * N + 5] = 52;
+            map[6 * N + 5] = 55;
+            map[1 * N + 6] = 39;
+            map[2 * N + 6] = 43;
+            map[3 * N + 6] = 47;
+            map[4 * N + 6] = 50;
+            map[5 * N + 6] = 54;
+            map[6 * N + 6] = 59;
+            map[1 * N + 7] = 39;
+            map[2 * N + 7] = 43;
+            map[3 * N + 7] = 47;
+            map[4 * N + 7] = 51;
+            map[5 * N + 7] = 55;
+            map[6 * N + 7] = 58;
+            map[1 * N + 8] = 41;
+            map[2 * N + 8] = 45;
+            map[3 * N + 8] = 49;
+            map[4 * N + 8] = 53;
+            map[5 * N + 8] = 57;
+            map[6 * N + 8] = 62;
+            map[1 * N + 9] = 42;
+            map[2 * N + 9] = 46;
+            map[3 * N + 9] = 51;
+            map[4 * N + 9] = 55;
+            map[5 * N + 9] = 59;
+            map[6 * N + 9] = 63;
+            map[1 * N + 10] = 85;
+            map[2 * N + 10] = 94;
+            map[3 * N + 10] = 102;
+            map[4 * N + 10] = 110;
+            map[5 * N + 10] = 119;
+            map[6 * N + 10] = 127;
+            map[1 * N + 11] = 88;
+            map[2 * N + 11] = 97;
+            map[3 * N + 11] = 105;
+            map[4 * N + 11] = 115;
+            map[5 * N + 11] = 123;
+            map[6 * N + 11] = 132;
+            map[1 * N + 12] = 92;
+            map[2 * N + 12] = 101;
+            map[3 * N + 12] = 111;
+            map[4 * N + 12] = 119;
+            map[5 * N + 12] = 129;
+            map[6 * N + 12] = 138;
+            map[1 * N + 13] = 95;
+            map[2 * N + 13] = 104;
+            map[3 * N + 13] = 114;
+            map[4 * N + 13] = 124;
+            map[5 * N + 13] = 133;
+            map[6 * N + 13] = 143;
+            map[1 * N + 14] = 98;
+            map[2 * N + 14] = 108;
+            map[3 * N + 14] = 117;
+            map[4 * N + 14] = 127;
+            map[5 * N + 14] = 137;
+            map[6 * N + 14] = 147;
+            map[1 * N + 15] = 102;
+            map[2 * N + 15] = 112;
+            map[3 * N + 15] = 123;
+            map[4 * N + 15] = 133;
+            map[5 * N + 15] = 143;
+            map[6 * N + 15] = 153;
+            map[1 * N + 16] = 105;
+            map[2 * N + 16] = 116;
+            map[3 * N + 16] = 126;
+            map[4 * N + 16] = 136;
+            map[5 * N + 16] = 147;
+            map[6 * N + 16] = 157;
+            map[1 * N + 17] = 108;
+            map[2 * N + 17] = 119;
+            map[3 * N + 17] = 129;
+            map[4 * N + 17] = 141;
+            map[5 * N + 17] = 151;
+            map[6 * N + 17] = 162;
+            map[1 * N + 18] = 112;
+            map[2 * N + 18] = 123;
+            map[3 * N + 18] = 135;
+            map[4 * N + 18] = 145;
+            map[5 * N + 18] = 157;
+            map[6 * N + 18] = 168;
+            map[1 * N + 19] = 115;
+            map[2 * N + 19] = 126;
+            map[3 * N + 19] = 138;
+            map[4 * N + 19] = 150;
+            map[5 * N + 19] = 161;
+            map[6 * N + 19] = 173;
+            map[1 * N + 20] = 170;
+            map[2 * N + 20] = 187;
+            map[3 * N + 20] = 204;
+            map[4 * N + 20] = 221;
+            map[5 * N + 20] = 238;
+            map[6 * N + 20] = 255;
+            map[1 * N + 21] = 176;
+            map[2 * N + 21] = 194;
+            map[3 * N + 21] = 211;
+            map[4 * N + 21] = 229;
+            map[5 * N + 21] = 247;
+            map[6 * N + 21] = 264;
+            map[1 * N + 22] = 183;
+            map[2 * N + 22] = 201;
+            map[3 * N + 22] = 219;
+            map[4 * N + 22] = 238;
+            map[5 * N + 22] = 256;
+            map[6 * N + 22] = 274;
+            map[1 * N + 23] = 190;
+            map[2 * N + 23] = 209;
+            map[3 * N + 23] = 228;
+            map[4 * N + 23] = 247;
+            map[5 * N + 23] = 266;
+            map[6 * N + 23] = 285;
+            map[1 * N + 24] = 197;
+            map[2 * N + 24] = 217;
+            map[3 * N + 24] = 237;
+            map[4 * N + 24] = 256;
+            map[5 * N + 24] = 276;
+            map[6 * N + 24] = 296;
+            map[1 * N + 25] = 203;
+            map[2 * N + 25] = 223;
+            map[3 * N + 25] = 243;
+            map[4 * N + 25] = 264;
+            map[5 * N + 25] = 284;
+            map[6 * N + 25] = 304;
+            map[1 * N + 26] = 210;
+            map[2 * N + 26] = 231;
+            map[3 * N + 26] = 252;
+            map[4 * N + 26] = 273;
+            map[5 * N + 26] = 294;
+            map[6 * N + 26] = 315;
+            map[1 * N + 27] = 217;
+            map[2 * N + 27] = 239;
+            map[3 * N + 27] = 261;
+            map[4 * N + 27] = 282;
+            map[5 * N + 27] = 304;
+            map[6 * N + 27] = 326;
+            map[1 * N + 28] = 224;
+            map[2 * N + 28] = 246;
+            map[3 * N + 28] = 269;
+            map[4 * N + 28] = 291;
+            map[5 * N + 28] = 313;
+            map[6 * N + 28] = 336;
+            map[1 * N + 29] = 230;
+            map[2 * N + 29] = 253;
+            map[3 * N + 29] = 276;
+            map[4 * N + 29] = 299;
+            map[5 * N + 29] = 322;
+            map[6 * N + 29] = 345;
+            map[1 * N + 30] = 0;
+            map[2 * N + 30] = 312;
+            map[3 * N + 30] = 339;
+            map[4 * N + 30] = 368;
+            map[5 * N + 30] = 396;
+            map[6 * N + 30] = 424;
+            map[1 * N + 31] = 0;
+            map[2 * N + 31] = 323;
+            map[3 * N + 31] = 353;
+            map[4 * N + 31] = 382;
+            map[5 * N + 31] = 412;
+            map[6 * N + 31] = 441;
+            map[1 * N + 32] = 0;
+            map[2 * N + 32] = 336;
+            map[3 * N + 32] = 366;
+            map[4 * N + 32] = 397;
+            map[5 * N + 32] = 427;
+            map[6 * N + 32] = 458;
+            map[1 * N + 33] = 0;
+            map[2 * N + 33] = 347;
+            map[3 * N + 33] = 379;
+            map[4 * N + 33] = 410;
+            map[5 * N + 33] = 442;
+            map[6 * N + 33] = 474;
+            map[1 * N + 34] = 0;
+            map[2 * N + 34] = 361;
+            map[3 * N + 34] = 394;
+            map[4 * N + 34] = 427;
+            map[5 * N + 34] = 460;
+            map[6 * N + 34] = 492;
+            map[1 * N + 35] = 0;
+            map[2 * N + 35] = 373;
+            map[3 * N + 35] = 407;
+            map[4 * N + 35] = 440;
+            map[5 * N + 35] = 474;
+            map[6 * N + 35] = 508;
+            map[1 * N + 36] = 0;
+            map[2 * N + 36] = 385;
+            map[3 * N + 36] = 420;
+            map[4 * N + 36] = 455;
+            map[5 * N + 36] = 490;
+            map[6 * N + 36] = 525;
+            map[1 * N + 37] = 0;
+            map[2 * N + 37] = 398;
+            map[3 * N + 37] = 434;
+            map[4 * N + 37] = 471;
+            map[5 * N + 37] = 507;
+            map[6 * N + 37] = 543;
+            map[1 * N + 38] = 0;
+            map[2 * N + 38] = 409;
+            map[3 * N + 38] = 446;
+            map[4 * N + 38] = 484;
+            map[5 * N + 38] = 521;
+            map[6 * N + 38] = 558;
+            map[1 * N + 39] = 0;
+            map[2 * N + 39] = 424;
+            map[3 * N + 39] = 462;
+            map[4 * N + 39] = 500;
+            map[5 * N + 39] = 539;
+            map[6 * N + 39] = 578;
+            map[1 * N + 40] = 0;
+            map[2 * N + 40] = 0;
+            map[3 * N + 40] = 678;
+            map[4 * N + 40] = 735;
+            map[5 * N + 40] = 791;
+            map[6 * N + 40] = 847;
+            map[1 * N + 41] = 0;
+            map[2 * N + 41] = 0;
+            map[3 * N + 41] = 705;
+            map[4 * N + 41] = 763;
+            map[5 * N + 41] = 822;
+            map[6 * N + 41] = 881;
+            map[1 * N + 42] = 0;
+            map[2 * N + 42] = 0;
+            map[3 * N + 42] = 732;
+            map[4 * N + 42] = 793;
+            map[5 * N + 42] = 854;
+            map[6 * N + 42] = 915;
+            map[1 * N + 43] = 0;
+            map[2 * N + 43] = 0;
+            map[3 * N + 43] = 759;
+            map[4 * N + 43] = 823;
+            map[5 * N + 43] = 886;
+            map[6 * N + 43] = 949;
+            map[1 * N + 44] = 0;
+            map[2 * N + 44] = 0;
+            map[3 * N + 44] = 788;
+            map[4 * N + 44] = 852;
+            map[5 * N + 44] = 918;
+            map[6 * N + 44] = 984;
+            map[1 * N + 45] = 0;
+            map[2 * N + 45] = 0;
+            map[3 * N + 45] = 812;
+            map[4 * N + 45] = 881;
+            map[5 * N + 45] = 948;
+            map[6 * N + 45] = 1016;
+            map[1 * N + 46] = 0;
+            map[2 * N + 46] = 0;
+            map[3 * N + 46] = 841;
+            map[4 * N + 46] = 911;
+            map[5 * N + 46] = 981;
+            map[6 * N + 46] = 1051;
+            map[1 * N + 47] = 0;
+            map[2 * N + 47] = 0;
+            map[3 * N + 47] = 868;
+            map[4 * N + 47] = 940;
+            map[5 * N + 47] = 1013;
+            map[6 * N + 47] = 1085;
+            map[1 * N + 48] = 0;
+            map[2 * N + 48] = 0;
+            map[3 * N + 48] = 895;
+            map[4 * N + 48] = 970;
+            map[5 * N + 48] = 1044;
+            map[6 * N + 48] = 1119;
+            map[1 * N + 49] = 0;
+            map[2 * N + 49] = 0;
+            map[3 * N + 49] = 922;
+            map[4 * N + 49] = 998;
+            map[5 * N + 49] = 1075;
+            map[6 * N + 49] = 1152;
+            map[1 * N + 50] = 0;
+            map[2 * N + 50] = 0;
+            map[3 * N + 50] = 1017;
+            map[4 * N + 50] = 1102;
+            map[5 * N + 50] = 1187;
+            map[6 * N + 50] = 1272;
+            map[1 * N + 51] = 0;
+            map[2 * N + 51] = 0;
+            map[3 * N + 51] = 1057;
+            map[4 * N + 51] = 1146;
+            map[5 * N + 51] = 1234;
+            map[6 * N + 51] = 1321;
+            map[1 * N + 52] = 0;
+            map[2 * N + 52] = 0;
+            map[3 * N + 52] = 1098;
+            map[4 * N + 52] = 1189;
+            map[5 * N + 52] = 1281;
+            map[6 * N + 52] = 1373;
+            map[1 * N + 53] = 0;
+            map[2 * N + 53] = 0;
+            map[3 * N + 53] = 1140;
+            map[4 * N + 53] = 1235;
+            map[5 * N + 53] = 1330;
+            map[6 * N + 53] = 1425;
+            map[1 * N + 54] = 0;
+            map[2 * N + 54] = 0;
+            map[3 * N + 54] = 1180;
+            map[4 * N + 54] = 1278;
+            map[5 * N + 54] = 1376;
+            map[6 * N + 54] = 1474;
+            map[1 * N + 55] = 0;
+            map[2 * N + 55] = 0;
+            map[3 * N + 55] = 0;
+            map[4 * N + 55] = 1322;
+            map[5 * N + 55] = 1424;
+            map[6 * N + 55] = 1526;
+            map[1 * N + 56] = 0;
+            map[2 * N + 56] = 0;
+            map[3 * N + 56] = 0;
+            map[4 * N + 56] = 1365;
+            map[5 * N + 56] = 1470;
+            map[6 * N + 56] = 1575;
+            map[1 * N + 57] = 0;
+            map[2 * N + 57] = 0;
+            map[3 * N + 57] = 0;
+            map[4 * N + 57] = 1411;
+            map[5 * N + 57] = 1519;
+            map[6 * N + 57] = 1627;
+            map[1 * N + 58] = 0;
+            map[2 * N + 58] = 0;
+            map[3 * N + 58] = 0;
+            map[4 * N + 58] = 1454;
+            map[5 * N + 58] = 1566;
+            map[6 * N + 58] = 1679;
+            map[1 * N + 59] = 0;
+            map[2 * N + 59] = 0;
+            map[3 * N + 59] = 0;
+            map[4 * N + 59] = 1498;
+            map[5 * N + 59] = 1613;
+            map[6 * N + 59] = 1728;
+            map[1 * N + 60] = 0;
+            map[2 * N + 60] = 0;
+            map[3 * N + 60] = 0;
+            map[4 * N + 60] = 1469;
+            map[5 * N + 60] = 1582;
+            map[6 * N + 60] = 1695;
+            map[1 * N + 61] = 0;
+            map[2 * N + 61] = 0;
+            map[3 * N + 61] = 0;
+            map[4 * N + 61] = 1527;
+            map[5 * N + 61] = 1645;
+            map[6 * N + 61] = 1762;
+            map[1 * N + 62] = 0;
+            map[2 * N + 62] = 0;
+            map[3 * N + 62] = 0;
+            map[4 * N + 62] = 1588;
+            map[5 * N + 62] = 1710;
+            map[6 * N + 62] = 1832;
+            map[1 * N + 63] = 0;
+            map[2 * N + 63] = 0;
+            map[3 * N + 63] = 0;
+            map[4 * N + 63] = 1644;
+            map[5 * N + 63] = 1771;
+            map[6 * N + 63] = 1897;
+            map[1 * N + 64] = 0;
+            map[2 * N + 64] = 0;
+            map[3 * N + 64] = 0;
+            map[4 * N + 64] = 1705;
+            map[5 * N + 64] = 1835;
+            map[6 * N + 64] = 1967;
+            map[1 * N + 65] = 0;
+            map[2 * N + 65] = 0;
+            map[3 * N + 65] = 0;
+            map[4 * N + 65] = 1762;
+            map[5 * N + 65] = 1898;
+            map[6 * N + 65] = 2034;
+            map[1 * N + 66] = 0;
+            map[2 * N + 66] = 0;
+            map[3 * N + 66] = 0;
+            map[4 * N + 66] = 1822;
+            map[5 * N + 66] = 1962;
+            map[6 * N + 66] = 2101;
+            map[1 * N + 67] = 0;
+            map[2 * N + 67] = 0;
+            map[3 * N + 67] = 0;
+            map[4 * N + 67] = 1879;
+            map[5 * N + 67] = 2024;
+            map[6 * N + 67] = 2169;
+            map[1 * N + 68] = 0;
+            map[2 * N + 68] = 0;
+            map[3 * N + 68] = 0;
+            map[4 * N + 68] = 1940;
+            map[5 * N + 68] = 2089;
+            map[6 * N + 68] = 2238;
+            map[1 * N + 69] = 0;
+            map[2 * N + 69] = 0;
+            map[3 * N + 69] = 0;
+            map[4 * N + 69] = 1998;
+            map[5 * N + 69] = 2152;
+            map[6 * N + 69] = 2306;
+            map[1 * N + 70] = 0;
+            map[2 * N + 70] = 0;
+            map[3 * N + 70] = 0;
+            map[4 * N + 70] = 1836;
+            map[5 * N + 70] = 1977;
+            map[6 * N + 70] = 2118;
+            map[1 * N + 71] = 0;
+            map[2 * N + 71] = 0;
+            map[3 * N + 71] = 0;
+            map[4 * N + 71] = 1909;
+            map[5 * N + 71] = 2056;
+            map[6 * N + 71] = 2203;
+            map[1 * N + 72] = 0;
+            map[2 * N + 72] = 0;
+            map[3 * N + 72] = 0;
+            map[4 * N + 72] = 1983;
+            map[5 * N + 72] = 2135;
+            map[6 * N + 72] = 2288;
+            map[1 * N + 73] = 0;
+            map[2 * N + 73] = 0;
+            map[3 * N + 73] = 0;
+            map[4 * N + 73] = 2057;
+            map[5 * N + 73] = 2215;
+            map[6 * N + 73] = 2373;
+            map[1 * N + 74] = 0;
+            map[2 * N + 74] = 0;
+            map[3 * N + 74] = 0;
+            map[4 * N + 74] = 2130;
+            map[5 * N + 74] = 2295;
+            map[6 * N + 74] = 2458;
+            map[1 * N + 75] = 0;
+            map[2 * N + 75] = 0;
+            map[3 * N + 75] = 0;
+            map[4 * N + 75] = 2204;
+            map[5 * N + 75] = 2373;
+            map[6 * N + 75] = 2543;
+            map[1 * N + 76] = 0;
+            map[2 * N + 76] = 0;
+            map[3 * N + 76] = 0;
+            map[4 * N + 76] = 2276;
+            map[5 * N + 76] = 2451;
+            map[6 * N + 76] = 2626;
+            map[1 * N + 77] = 0;
+            map[2 * N + 77] = 0;
+            map[3 * N + 77] = 0;
+            map[4 * N + 77] = 2350;
+            map[5 * N + 77] = 2531;
+            map[6 * N + 77] = 2712;
+            map[1 * N + 78] = 0;
+            map[2 * N + 78] = 0;
+            map[3 * N + 78] = 0;
+            map[4 * N + 78] = 2424;
+            map[5 * N + 78] = 2610;
+            map[6 * N + 78] = 2796;
+            map[1 * N + 79] = 0;
+            map[2 * N + 79] = 0;
+            map[3 * N + 79] = 0;
+            map[4 * N + 79] = 2497;
+            map[5 * N + 79] = 2689;
+            map[6 * N + 79] = 2882;
+            map[1 * N + 80] = 0;
+            map[2 * N + 80] = 0;
+            map[3 * N + 80] = 0;
+            map[4 * N + 80] = 2571;
+            map[5 * N + 80] = 2769;
+            map[6 * N + 80] = 2967;
+            map[1 * N + 81] = 0;
+            map[2 * N + 81] = 0;
+            map[3 * N + 81] = 0;
+            map[4 * N + 81] = 2673;
+            map[5 * N + 81] = 2879;
+            map[6 * N + 81] = 3084;
+            map[1 * N + 82] = 0;
+            map[2 * N + 82] = 0;
+            map[3 * N + 82] = 0;
+            map[4 * N + 82] = 2777;
+            map[5 * N + 82] = 2990;
+            map[6 * N + 82] = 3204;
+            map[1 * N + 83] = 0;
+            map[2 * N + 83] = 0;
+            map[3 * N + 83] = 0;
+            map[4 * N + 83] = 2879;
+            map[5 * N + 83] = 3101;
+            map[6 * N + 83] = 3322;
+            map[1 * N + 84] = 0;
+            map[2 * N + 84] = 0;
+            map[3 * N + 84] = 0;
+            map[4 * N + 84] = 2981;
+            map[5 * N + 84] = 3210;
+            map[6 * N + 84] = 3440;
+            map[1 * N + 85] = 0;
+            map[2 * N + 85] = 0;
+            map[3 * N + 85] = 0;
+            map[4 * N + 85] = 3085;
+            map[5 * N + 85] = 3323;
+            map[6 * N + 85] = 3559;
+            map[1 * N + 86] = 0;
+            map[2 * N + 86] = 0;
+            map[3 * N + 86] = 0;
+            map[4 * N + 86] = 3188;
+            map[5 * N + 86] = 3432;
+            map[6 * N + 86] = 3678;
+            map[1 * N + 87] = 0;
+            map[2 * N + 87] = 0;
+            map[3 * N + 87] = 0;
+            map[4 * N + 87] = 3290;
+            map[5 * N + 87] = 3544;
+            map[6 * N + 87] = 3797;
+            map[1 * N + 88] = 0;
+            map[2 * N + 88] = 0;
+            map[3 * N + 88] = 0;
+            map[4 * N + 88] = 3393;
+            map[5 * N + 88] = 3654;
+            map[6 * N + 88] = 3915;
+            map[1 * N + 89] = 0;
+            map[2 * N + 89] = 0;
+            map[3 * N + 89] = 0;
+            map[4 * N + 89] = 3497;
+            map[5 * N + 89] = 3766;
+            map[6 * N + 89] = 4035;
+            map[1 * N + 90] = 0;
+            map[2 * N + 90] = 0;
+            map[3 * N + 90] = 0;
+            map[4 * N + 90] = 2570;
+            map[5 * N + 90] = 2768;
+            map[6 * N + 90] = 2965;
+            map[1 * N + 91] = 0;
+            map[2 * N + 91] = 0;
+            map[3 * N + 91] = 0;
+            map[4 * N + 91] = 2674;
+            map[5 * N + 91] = 2879;
+            map[6 * N + 91] = 3086;
+            map[1 * N + 92] = 0;
+            map[2 * N + 92] = 0;
+            map[3 * N + 92] = 0;
+            map[4 * N + 92] = 2776;
+            map[5 * N + 92] = 2989;
+            map[6 * N + 92] = 3202;
+            map[1 * N + 93] = 0;
+            map[2 * N + 93] = 0;
+            map[3 * N + 93] = 0;
+            map[4 * N + 93] = 2879;
+            map[5 * N + 93] = 3101;
+            map[6 * N + 93] = 3323;
+            map[1 * N + 94] = 0;
+            map[2 * N + 94] = 0;
+            map[3 * N + 94] = 0;
+            map[4 * N + 94] = 2983;
+            map[5 * N + 94] = 3212;
+            map[6 * N + 94] = 3441;
+            map[1 * N + 95] = 0;
+            map[2 * N + 95] = 0;
+            map[3 * N + 95] = 0;
+            map[4 * N + 95] = 3084;
+            map[5 * N + 95] = 3322;
+            map[6 * N + 95] = 3559;
+            map[1 * N + 96] = 0;
+            map[2 * N + 96] = 0;
+            map[3 * N + 96] = 0;
+            map[4 * N + 96] = 3187;
+            map[5 * N + 96] = 3432;
+            map[6 * N + 96] = 3677;
+            map[1 * N + 97] = 0;
+            map[2 * N + 97] = 0;
+            map[3 * N + 97] = 0;
+            map[4 * N + 97] = 3291;
+            map[5 * N + 97] = 3544;
+            map[6 * N + 97] = 3798;
+            map[1 * N + 98] = 0;
+            map[2 * N + 98] = 0;
+            map[3 * N + 98] = 0;
+            map[4 * N + 98] = 3393;
+            map[5 * N + 98] = 3654;
+            map[6 * N + 98] = 3915;
+            map[1 * N + 99] = 0;
+            map[2 * N + 99] = 0;
+            map[3 * N + 99] = 0;
+            map[4 * N + 99] = 0;
+            map[5 * N + 99] = 0;
+            map[6 * N + 99] = 0;
+            for (var i = 1; i <= 6; i ++)
+				sum[i * N] = map[i * N] = 0;
+            for (var i = 1; i <= 6; i ++)
+                for (var j = 1; j <= 100; j++)
+                {
+                    sum[i * N + j] = sum[i * N + j - 1] + map[i * N + j - 1];
+                }
+			calcmain();
+        }
+		);
+		
+		function calcmain()
+        {
+			var nowlv = 0, nowexp = 0, tolv = 0, toexp = 0, feedexp = 0, cost = 0;
+			nowlv = parseInt($('#NowLV').val());
+            if (nowlv == undefined || nowlv < 1 || nowlv > 99) return;
+			if ($('#NowEXP').val().length != 0) nowexp = parseInt($('#NowEXP').val());
+			else nowexp = map[rare * N + nowlv];
+			tolv = parseInt($('#ToLV').val());
+            if (tolv == undefined || tolv < 1 || tolv > 99) return;
+			if ($('#ToEXP').val().length != 0) toexp = parseInt($('#ToEXP').val());
+			else toexp = map[rare * N + tolv];
+			feedexp = parseInt($('#FeedEXP').val());
+            if (nowexp == undefined || isNaN(nowexp) || toexp == undefined || isNaN(toexp) || feedexp == undefined || isNaN(feedexp) || feedexp < 1) return;
+            var lv = nowlv, exp = nowexp;
+			nowexp = sum[rare * N + nowlv + 1] - nowexp;
+			toexp = sum[rare * N + tolv + 1] - toexp;
+            while (lv < tolv || lv == tolv && exp > toexp){
+                cost += 4 * (160 + 40 * lv);
+                exp -= feedexp;
+                while (exp <= 0){
+                    exp += map[rare * N + lv + 1];
+                    lv ++ ;
+                }
+            }
+			$('#NeedEXP').html(toexp - nowexp);
+			$('#NeedFeed').html(Math.floor((toexp - nowexp) / feedexp));
+			$('#RemainEXP').html((toexp - nowexp) % feedexp);
+            $('#GoldCost').html(cost);
+			console.log(nowlv, nowexp, tolv);
+			console.log(feedexp, nowexp, toexp);
+        }
+	
+</script>    
+</html>
