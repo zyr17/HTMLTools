@@ -329,8 +329,8 @@ const VueApp = {
                 let rank = 0;
                 for (let j = 0; j < this.players.length; j ++ )
                     rank += this.players[j].score > this.players[i].score || this.players[j].score == this.players[i].score && j < i;
-                let extra = rank == 0 ? this.kyoutaku * this.settings.reachcost : 0;
-                results.push((this.players[i].score + extra - this.settings.initscore) / 1000 + this.settings.uma[rank]);
+                this.players[i].score += rank == 0 ? this.kyoutaku * this.settings.reachcost : 0;
+                results.push((this.players[i].score - this.settings.initscore) / 1000 + this.settings.uma[rank]);
             }
             this.settings.roundresults = results;
             this.settings.showfinalresults = true;

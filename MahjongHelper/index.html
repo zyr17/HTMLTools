@@ -5,7 +5,6 @@
     <meta charset="utf-8" />
     <title>SimpleMahjong</title>
     <link rel="stylesheet" href="index.css" type="text/css" />
-    <link rel="stylesheet" href="tiles.css" type="text/css" />
     <script>if (typeof module === 'object') { window.module = module; module = undefined; }</script>
     <!-- <script src="https://unpkg.com/vue@next"></script> -->
     <!-- <script src="https://unpkg.com/vue@3.2.29/dist/vue.global.prod.js"></script> -->
@@ -95,7 +94,9 @@
                     <button v-if="player.tenpai == -1" @click="ryuukyokuclick(index, 1)" class="ryuukyokubtn" :disabled="!started">流局</button>
                 </div>
                 <div class="down">
-                    <div v-show="player.reach" class="reach tenbou"></div>
+                    <div v-show="player.reach" class="reach tenbou">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 30"> <g> <title>Layer 1</title> <rect rx="4" id="svg_13" height="28" width="358" y="1" x="1" stroke-width="2" stroke="#b8b8b8" fill="#ffffff"/> <ellipse ry="10" rx="10" id="svg_14" cy="15" cx="180" stroke-width="0" stroke="#b8b8b8" fill="#a02419"/> </g> </svg>
+                    </div>
                 </div>
                 <div v-if="player.agari" class="agaridiv"></div>
             </div>
@@ -106,9 +107,13 @@
                 <div id="bakaze">{{ settings.kazename[bakaze] }}</div>
                 <div id="kyoku">{{ kyoku == -1 ? '' : kyoku + 1 }}</div>
                 <div id="honbakyoutaku">
-                    <div v-show="honba != -1" id="honbaicon"></div>
+                    <div v-show="honba != -1" id="honbaicon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500"> <g> <title>Layer 1</title> <rect stroke-width="10" transform="rotate(45, 249.5, 250)" id="svg_3" height="560" width="141" y="-30" x="179" stroke="#a0a0a0" fill="#ffffff"/> <ellipse ry="14" rx="14" id="svg_4" cy="250" cx="213" stroke-width="0" stroke="#a0a0a0" fill="#545a81"/> <ellipse ry="14" rx="14" id="svg_6" cy="250" cx="287" stroke-width="0" stroke="#a0a0a0" fill="#545a81"/> <ellipse ry="14" rx="14" id="svg_7" cy="287" cx="250" stroke-width="0" stroke="#a0a0a0" fill="#545a81"/> <ellipse ry="14" rx="14" id="svg_8" cy="213" cx="250" stroke-width="0" stroke="#a0a0a0" fill="#545a81"/> <ellipse ry="14" rx="14" id="svg_9" cy="287" cx="176" stroke-width="0" stroke="#a0a0a0" fill="#545a81"/> <ellipse ry="14" rx="14" id="svg_10" cy="324" cx="213" stroke-width="0" stroke="#a0a0a0" fill="#545a81"/> <ellipse ry="14" rx="14" id="svg_11" cy="176" cx="287" stroke-width="0" stroke="#a0a0a0" fill="#545a81"/> <ellipse ry="14" rx="14" id="svg_12" cy="213" cx="324" stroke-width="0" stroke="#a0a0a0" fill="#545a81"/> </g> </svg>
+                    </div>
                     <div id="honba">{{ honba == -1 ? '' : honba }}</div>
-                    <div v-show="kyoutaku != -1" id="kyoutakuicon"></div>
+                    <div v-show="kyoutaku != -1" id="kyoutakuicon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500"> <g> <title>Layer 1</title> <rect stroke-width="10" transform="rotate(45, 249.5, 250)" id="svg_3" height="560" width="141" y="-30" x="179" stroke="#a0a0a0" fill="#ffffff"/> <ellipse ry="37.5" rx="37.5" id="svg_4" cy="250" cx="250" stroke-width="0" stroke="#a0a0a0" fill="#a02419"/> </g> </svg>
+                    </div>
                     <div id="kyoutaku">{{ kyoutaku == -1 ? '' : kyoutaku }}</div>
                 </div>
                 <div class="up">
