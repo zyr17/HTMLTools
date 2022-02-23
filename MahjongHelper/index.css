@@ -1,0 +1,298 @@
+body{
+    overflow: hidden;
+    font-size: 170%;
+    background-color: black;
+    color: white;
+}
+body > div > div{
+    width: 400px;
+    height: 400px;
+    font-family: '楷体', '宋体';
+}
+button {
+    font-family: '楷体', '宋体';
+    text-align: center;
+    font-size: 90%;
+    height: 90%;
+}
+div{
+    position: absolute;
+    /* border: 0.1px solid #0000FF; */
+}
+.left{
+    transform: rotate(90deg);
+}
+.top{
+    transform: rotate(180deg);
+}
+.right{
+    transform: rotate(270deg);
+}
+.redfont {
+    font-weight: bold;
+    color: red;
+}
+.greenfont {
+    font-weight: bold;
+    color: green;
+}
+.blackfont {
+    font-weight: bold;
+    color: black;
+}
+.whitefont {
+    font-weight: bold;
+    color: white;
+}
+
+#dicesdiv {
+    z-index: 999;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+}
+#dicesdiv > #showdicesdiv {
+    width: 100%;
+    height: 100%;
+}
+#dicesdiv > #showdicesdiv > div {
+    position: relative;
+    width: 30%;
+    height: 30%;
+}
+#dicesdiv svg {
+    width: 100%;
+    height: 100%;
+}
+#dicesdiv > .hint {
+    position: absolute;
+    width: 100%;
+    top: 75%;
+    text-align: center;
+}
+
+#resultsdiv {
+    z-index: 999;
+    width: 100%;
+    height: 100%;
+}
+#resultsdiv .hint {
+    position: absolute;
+    text-align: center;
+    background-color: black;
+}
+#resultsdiv .resultscore {
+    width: 100%;
+    height: 20%;
+    font-size: 300%;
+    text-align: center;
+    background-color: black;
+}
+.resultscore.left {
+    top: 40%;
+    left: -40%;
+}
+.resultscore.right {
+    top: 40%;
+    left: 40%;
+}
+.resultscore.bottom {
+    top: 80%;
+}
+
+#agaridiv {
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    background-color: black;
+}
+#agaridiv #agaricentercolordiv > div {
+    width: 0;
+    height: 0;
+}
+#agaridiv #agaricentertextdiv > div {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    text-align: center;
+    align-items: flex-end;
+    justify-content: center;
+}
+#agaridiv #agaricentertextdiv .btndiv {
+    align-items: center;
+    flex-wrap: wrap;
+    align-content: center;
+}
+#agaridiv #agaricentertextdiv .btndiv button {
+    height: auto;
+    margin: 5%;
+}
+#agaridiv .hand > div {
+    display: block;
+}
+#agaridiv .hand .middle > div {
+    position: absolute;
+}
+#agaridiv .hand .down {
+    display: flex;
+    justify-content: center;
+}
+#agaridiv .hand .down .hint {
+    text-align: center;
+    font-size: 50%;
+}
+.handiv, .fudiv {
+    width: 50%;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: space-around;
+}
+.handiv {
+    border-right: 0.5px solid grey;
+    justify-content: flex-end;
+}
+.fudiv {
+    left: 50%;
+    border-left: 0.5px solid grey;
+    justify-content: flex-start;
+}
+.middle .handiv, .middle .fudiv {
+    font-size: 50%;
+}
+.handiv button, .fudiv button {
+    width: auto;
+    height: 45%;
+    margin-top: 2.5%;
+    margin-bottom: 2.5%;
+    margin-left: 0.5px;
+    margin-right: 0.5px;
+}
+
+.hand{
+    width: 100%;
+    pointer-events: none;
+}
+.hand > * {
+    pointer-events: visible;
+}
+.hand .up{
+    height: 40%;
+}
+.hand .middle {
+    height: 40%;
+    top: 40%;
+}
+.hand .down {
+    height: 20%;
+    top: 80%;
+}
+.hand .reach {
+    height: 100%;
+    width: 100%;
+}
+
+.middle > div {
+    position: relative;
+}
+.hand .kaze {
+    height: 100%;
+    font-size: 100%;
+}
+.hand .score {
+    height: 100%;
+    width: 100%;
+    font-size: 160%;
+}
+.hand button {
+    font-size: 70%;
+}
+
+#center{
+    width: 37.5%;
+    height: 37.5%;
+    text-align: center;
+}
+#center #bakaze {
+    width: 33.3%;
+    height: 33.3%;
+    top: 33.3%;
+    font-size: 160%;
+    font-weight: bold;
+}
+#center #kyoku {
+    width: 33.3%;
+    height: 33.3%;
+    top: 33.3%;
+    left: 33.3%;
+    font-size: 160%;
+    font-weight: bold;
+}
+#center #honbakyoutaku {
+    width: 33.3%;
+    height: 33.3%;
+    top: 33.3%;
+    left: 66.6%;
+    font-size: 80%;
+}
+#honbakyoutaku #honbaicon{
+    width: 45%;
+    height: 45%;
+    left: 2.5%;
+    top: 52.5%;
+}
+#honbakyoutaku #kyoutakuicon{
+    width: 45%;
+    height: 45%;
+    left: 2.5%;
+    top: 2.5%;
+}
+#honbakyoutaku #kyoutaku{
+    width: 50%;
+    height: 50%;
+    left: 50%;
+}
+#honbakyoutaku #honba{
+    width: 50%;
+    height: 50%;
+    left: 50%;
+    top: 50%;
+}
+#center .up, #center .down {
+    width: 100%;
+    height: 33%;
+}
+#center .down {
+    top: 67%;
+}
+#center #tenpaiconfirmdiv {
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    background-color: black;
+}
+#center #tenpaiconfirmdiv button {
+    height: auto
+}
+
+#center .up, #center .down, .hand .middle, .hand .down, .hand .kaze, .hand .score, #dicesdiv #showdicesdiv, #center #tenpaiconfirmdiv, #resultsdiv .hint {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.score, .corner, .reach, #matchtitle, #remaintile, #dora, #honba, #kyoutaku, body > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.light{
+    color: #FF0000;
+}
+body > div{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
