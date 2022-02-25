@@ -16,6 +16,51 @@
 <body>
     <div>
         <div id="maindiv">
+            <div v-show="settings.showsettings" id="settingsdiv" class="coverall">
+                <div class="hint" :style="'visibility: ' + (settings.showhint ? 'visible' : 'hidden')">警告：局中修改，错误数值可能导致未知异常！</div>
+                <div style="font-size: 200%;">初始点：</div>
+                <div id="startsettings">
+                    <div v-for="(data, index) in settings.initscore">
+                        <div>{{ settings.kazename[index] }}</div>
+                        <input v-model.number="settings.initscore[index]">
+                    </div>
+                </div>
+                <div style="font-size: 200%;">马点：</div>
+                <div id="umasettings">
+                    <div v-for="(data, index) in settings.uma">
+                        <div>{{ index }}位</div>
+                        <input v-model.number="settings.uma[index]">
+                    </div>
+                </div>
+                <div id="reachhonbabacksettings">
+                    <div>返点</div>
+                    <input v-model.number="settings.backscore">
+                    <div>立直需点</div>
+                    <input v-model.number="settings.reachcost">
+                    <div>本场增点</div>
+                    <input v-model.number="settings.honbacost">
+                </div>
+                <div id="hinthistorysettings">
+                    <input type="checkbox" id="showhintckbx" v-model="settings.showhint">
+                    <label for="showhintckbx">显示提示文字</label>
+                    <div style="position: relative; margin-left: 20%;">历史记录长度</div>
+                    <input v-model.number="settings.historylength" style="width: 10%;">
+                </div>
+                <div>
+                    <button @click="settings.showresetsettingsconfirm = true;">重置设置</button>
+                </div>
+                <div>
+                    <button @click="settings.showsettings = false; savesettings();">关闭</button>
+                </div>
+                <div v-show="settings.showresetsettingsconfirm" id="resetsettingsconfirm" style="height: 100%; width: 100%; font-size: 200%;">
+                    <div class="coverall" >确认重置设置？</div>
+                    <div class="yesnobtn" style="z-index: 1999; width: 100%; height: 50%; top: 50%; display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap;">
+                        <button id="resetsettingsyes" style="color: red; font-weight: bold; height: auto" @click="settings.showresetsettingsconfirm = false; resetsettingsclick();">确认</button>
+                        <button id="resetsettingsno" style="height: auto" @click="settings.showresetsettingsconfirm = false;">取消</button>
+                    </div>
+                </div>
+
+            </div>
             <div v-show="settings.showagari" id="agaridiv" :class="settings.positionname[settings.agariposition]">
                 <div id="agaricentercolordiv" :style="agaricentercolorstyle"></div>
                 <div id="agaricentertextdiv">
@@ -42,18 +87,18 @@
                             <button v-for="(data, index) in agarihanbtndata(pindex)" :style="data.style" :index="index" @click="agarihanclick(pindex, index)">{{ data.text }}</button>
                         </div>
                         <div class="fudiv">
-                            <button v-for="(data, index) in agarifubtndata(pindex)" :style="data.style" :index="index" @click="agarifuclick(pindex, index)">{{ data.text }}</button>
+                            <button v-for="(data, index) in agarifubtndata(pindex)" :style="data.style" :disabled="settings.agarihaninfo[pindex][0] != 1" :index="index" @click="agarifuclick(pindex, index)">{{ data.text }}</button>
                         </div>
                     </div>
                     <div class="down">
-                        <div class="hint">部分按钮可点击改变</div>
+                        <div v-show="settings.showhint" class="hint">部分按钮可点击改变</div>
                         <!-- <div class="handiv"></div> -->
                         <!-- <div class="fudiv"></div> -->
                     </div>
                 </div>
             </div>
             <div v-show="settings.showroundresults | settings.showfinalresults" id="resultsdiv" @click="resultsdivclick();">
-                <div class="hint">点击任意位置关闭</div>
+                <div class="hint">{{ settings.showhint ? '点击任意位置关闭' : '' }}</div>
                 <div v-for="(res, index) in settings.roundresults" class="resultscore" :class="settings.positionname[index] + ' ' + resultfontcolor(res)" :index="index">
                     {{ res > 0 ? '+' : res < 0 ? '-' : '±' }}{{ Math.abs(res) }}
                 </div>
@@ -77,7 +122,7 @@
                         <svg v-if="settings.dices[1] == 6" class="dice6svg" t="1645538422111" class="icon" viewBox="0 0 1039 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4935"><path d="M15.013749 14.805946m156.735224 0l695.515803 0q156.735224 0 156.735224 156.735224l0 680.91766q0 156.735224-156.735224 156.735224l-695.515803 0q-156.735224 0-156.735224-156.735224l0-680.91766q0-156.735224 156.735224-156.735224Z" fill="#FFFFFF" p-id="4936"></path><path d="M867.264776 1016.986657H171.748973a164.683679 164.683679 0 0 1-164.527827-164.527827V171.437269A164.683679 164.683679 0 0 1 171.748973 7.013343h695.515803A164.683679 164.683679 0 0 1 1031.792603 171.437269v681.021561a164.683679 164.683679 0 0 1-164.527827 164.527827zM171.748973 22.598549A149.098473 149.098473 0 0 0 22.806352 171.437269v681.021561a149.098473 149.098473 0 0 0 148.942621 148.942621h695.515803a149.098473 149.098473 0 0 0 148.942621-148.942621V171.437269a149.098473 149.098473 0 0 0-148.942621-148.83872z" fill="#AAAAAA" p-id="4937"></path><path d="M291.183603 206.088377m-129.876719 0a129.876719 129.876719 0 1 0 259.753438 0 129.876719 129.876719 0 1 0-259.753438 0Z" p-id="4938"></path><path d="M747.830146 206.088377m-129.876719 0a129.876719 129.876719 0 1 0 259.753437 0 129.876719 129.876719 0 1 0-259.753437 0Z" p-id="4939"></path><path d="M291.183603 522.20831m-129.876719 0a129.876719 129.876719 0 1 0 259.753438 0 129.876719 129.876719 0 1 0-259.753438 0Z" p-id="4940"></path><path d="M747.830146 522.20831m-129.876719 0a129.876719 129.876719 0 1 0 259.753437 0 129.876719 129.876719 0 1 0-259.753437 0Z" p-id="4941"></path><path d="M291.183603 838.380194m-129.876719 0a129.876719 129.876719 0 1 0 259.753438 0 129.876719 129.876719 0 1 0-259.753438 0Z" p-id="4942"></path><path d="M747.830146 838.380194m-129.876719 0a129.876719 129.876719 0 1 0 259.753437 0 129.876719 129.876719 0 1 0-259.753437 0Z" p-id="4943"></path></svg>
                     </div>
                 </div>
-                <div class="hint">点击任意位置关闭</div>
+                <div class="hint">{{ settings.showhint ? '点击任意位置关闭' : '' }}</div>
             </div>
             <div v-for="(player, index) in players" class="hand" :class="player.position" :index="index">
                 <div class="up">
@@ -120,11 +165,18 @@
                 <div class="up">
                     <button v-if="!started" id="start" @click="startnew">开始</button>
                     <button v-if="started" id="result" @click="endmatch">终局</button>
-                    <button id="settings" :disabled="true">设置</button>
+                    <button id="settings" @click="settings.showsettings = true;">设置</button>
                 </div>
                 <div class="down">
                     <button id="dice" @click="gendices(); settings.showdices = true">骰子</button>
-                    <button id="cancel" @click="cancelclick" :disabled="logs.length == 0">撤销</button>
+                    <button id="cancel" @click="settings.showcancelconfirm = true;" :disabled="logs.length <= 1">撤销</button>
+                    <div v-show="settings.showcancelconfirm" id="cancelconfirm" style="height: 100%; width: 100%;">
+                        <div class="coverall" >确认撤销？</div>
+                        <div class="yesnobtn" style="z-index: 1999; width: 100%; height: 100%;">
+                            <button id="cancelyes" style="color: red; font-weight: bold;" @click="settings.showcancelconfirm = false; cancelclick();">确认</button>
+                            <button id="cancelno" @click="settings.showcancelconfirm = false;">取消</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -48,6 +48,64 @@ svg {
     font-weight: bold;
     color: white;
 }
+.coverall {
+    z-index: 999; 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 400px; 
+    height: 400px; 
+    background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#settingsdiv {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    font-size: 50%;
+}
+#settingsdiv > div {
+    position: relative;
+    width: 100%;
+}
+#settingsdiv input {
+    max-width: 60%;
+}
+#settingsdiv #reachhonbabacksettings input {
+    max-width: 10%;
+}
+#settingsdiv #startsettings, #settingsdiv #umasettings, #settingsdiv #reachhonbabacksettings {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+    align-items: center;
+    width: 100%;
+}
+#settingsdiv #hinthistorysettings {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    width: 100%;
+}
+#settingsdiv #startsettings > div, #settingsdiv #umasettings > div, #settingsdiv #reachhonbabacksettings > div {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+    align-items: center;
+    position: relative;
+    max-width: 20%;
+}
+#settingsdiv #startsettings > div > *, #settingsdiv #umasettings > div > * {
+    position: relative;
+}
 
 #dicesdiv {
     z-index: 999;
@@ -277,7 +335,7 @@ svg {
     height: auto
 }
 
-#center .up, #center .down, .hand .middle, .hand .down, .hand .kaze, .hand .score, #dicesdiv #showdicesdiv, #center #tenpaiconfirmdiv, #resultsdiv .hint {
+#center .up, #center .down, .hand .middle, .hand .down, .hand .kaze, .hand .score, #dicesdiv #showdicesdiv, #center #tenpaiconfirmdiv, #resultsdiv .hint, #cancelconfirm .yesnobtn, #cancelconfirm .hint {
     display: flex;
     align-items: center;
     justify-content: space-around;

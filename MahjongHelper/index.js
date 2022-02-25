@@ -13,62 +13,85 @@ function oneplayer(pos) {
     }
 }
 
+let default_settings = {
+    // consts
+    centersize: 37.5,
+    fullpx: 400,
+    kazename: ['東', '南', '西', '北'],
+    positionname: ['bottom', 'right', 'top', 'left'],
+    hanlist: [
+        ['没和'], 
+        ['1番', '2番', '3番', '4番'],
+        ['满贯'], 
+        ['跳满', '倍满', '三倍满'],
+        ['一倍役满', '二倍役满', '三倍役满', '四倍役满', '五倍役满', '六倍役满']
+    ],
+    hanpoint: [
+        [0], 
+        [1, 2, 3, 4],
+        [5], 
+        [6, 8, 11], 
+        [13, 26, 39, 52, 65, 78]
+    ],
+    fulist: [
+        [20], 
+        [25], 
+        [30], 
+        [40], 
+        [50], 
+        [60], 
+        [70], 
+        [80, 90, 100, 110]
+    ],
+
+    // settings
+    reachcost: 1000,
+    honbacost: 100,
+    initscore: [25000, 25000, 25000, 25000],
+    backscore: 25000,
+    uma: [15, 5, -5, -15],
+    historylength: 1000,
+
+    // popup variables
+    roundresults: [0, 0, 0, 0],
+    dices: [1, 1],
+    agariposition: 0,
+    agarihaninfo: [ [0, 0], [0, 0], [0, 0], [0, 0] ],
+    agarifuinfo: [ [0, 0], [0, 0], [0, 0], [0, 0] ],
+
+    // popup switchs
+    showroundresultszero: false,
+    showdices: false,
+    showroundresults: false,
+    showfinalresults: false,
+    showtenpaiconfirm: false,
+    showcancelconfirm: false,
+    showagari: false,
+    showresetsettingsconfirm: false,
+    showsettings: false,
+    showhint: true,
+}
+
+let stored_logs = localStorage.getItem('logs');
+let stored_settings = localStorage.getItem('settings');
+try {
+    stored_logs = stored_logs === null ? [] : JSON.parse(stored_logs);
+    stored_settings = stored_settings === null ? JSON.parse(JSON.stringify(default_settings)) : JSON.parse(stored_settings);
+}
+catch {
+    console.log('localStorage Error, use default');
+    stored_logs = [];
+    stored_settings = default_settings;
+}
+
+console.log(stored_logs, stored_settings);
+
 const VueApp = {
     data() {
         return {
-            logs: [],
-            settings: { // data that no need to save in logs
-                // consts
-                centersize: 37.5,
-                fullpx: 400,
-                kazename: ['東', '南', '西', '北'],
-                positionname: ['bottom', 'right', 'top', 'left'],
-                hanlist: [
-                    ['没和'], 
-                    ['1番', '2番', '3番', '4番'], 
-                    ['满贯'], 
-                    ['跳满', '倍满', '三倍满'], 
-                    ['一倍役满', '二倍役满', '三倍役满', '四倍役满', '五倍役满', '六倍役满']
-                ],
-                hanpoint: [
-                    [0], 
-                    [1, 2, 3, 4], 
-                    [5], 
-                    [6, 8, 11], 
-                    [13, 26, 39, 52, 65, 78]
-                ],
-                fulist: [
-                    [20], 
-                    [25], 
-                    [30], 
-                    [40], 
-                    [50], 
-                    [60], 
-                    [70], 
-                    [80, 90, 100, 110]
-                ],
-
-                // settings
-                reachcost: 1000,
-                honbacost: 100,
-                initscore: 25000,
-                uma: [15, 5, -5, -15],
-
-                // popup variables
-                roundresults: [0, 0, 0, 0],
-                dices: [1, 1],
-                agariposition: 0,
-                agarihaninfo: [ [0, 0], [0, 0], [0, 0], [0, 0] ],
-                agarifuinfo: [ [0, 0], [0, 0], [0, 0], [0, 0] ],
-
-                // popup switchs
-                showroundresultszero: false,
-                showdices: false,
-                showroundresults: false,
-                showfinalresults: false,
-                showtenpaiconfirm: false,
-                showagari: false,
-            },
+            logs: stored_logs,
+            // data that no need to save in logs
+            settings: stored_settings,
             started: false,
             bakaze: -1,
             kyoku: -1,
@@ -87,6 +110,12 @@ const VueApp = {
             let currentdata = JSON.parse(JSON.stringify(this.$data));
             delete currentdata.logs;
             this.logs.push(JSON.stringify(currentdata));
+            if (this.logs.length > this.settings.historylength)
+                this.logs.splice(0, this.logs.length - this.settings.historylength);
+            localStorage.setItem('logs', JSON.stringify(this.logs));
+        },
+        savesettings() {
+            localStorage.setItem('settings', JSON.stringify(this.settings));
         },
         cleartable() {
             for (let i = 0; i < this.players.length; i ++ )
@@ -99,7 +128,7 @@ const VueApp = {
             this.settings.showfinalresults = false;
             this.settings.showtenpaiconfirm = false;
             for (let i = 0; i < this.players.length; i ++ )
-                this.players[i].score = this.settings.initscore;
+                this.players[i].score = this.settings.initscore[i];
             this.initround();
         },
         initround() {
@@ -157,12 +186,12 @@ const VueApp = {
                 this.players[i].score += this.settings.roundresults[i];
         },
         resultsdivclick() {
-            console.log(11111)
             if (this.settings.showroundresults)
                 this.updatescore();
             else if (this.settings.showfinalresults)
                 this.cleartable();
             this.settings.showroundresults = this.settings.showfinalresults = false; 
+            this.savetable();
         },
         resultfontcolor(res) { 
             if (res < 0) return 'redfont';
@@ -178,7 +207,6 @@ const VueApp = {
             this.settings.showtenpaiconfirm = decided == this.players.length;
         },
         tenpaiconfirm() {
-            this.savetable();
             let gets = [0, 3000, 1500, 1000, 0];
             let gives = [0, -3000, -1500, -1000, 0];
             let getc = 0, givec = 0;
@@ -200,10 +228,10 @@ const VueApp = {
             this.nextround(res, nextkyoku, false);
         },
         reachclick(index) {
-            this.savetable();
             this.players[index].reach = true;
             this.players[index].score -= this.settings.reachcost;
             this.kyoutaku ++ ;
+            this.savetable();
         },
         agariclick(index) {
             this.settings.agariposition = index;
@@ -256,7 +284,6 @@ const VueApp = {
             }
         },
         agariconfirm() {
-            this.savetable();
             function basepoint(han, fu) {
                 let res = fu * 4;
                 for (let i = 0; i < han; i ++ )
@@ -276,7 +303,6 @@ const VueApp = {
                 return res;
             }
             let oya = (this.players.length + this.kyoku - this.settings.agariposition) % this.players.length;
-            console.log(oya);
             let res = [0];
             if (this.agaricolor[0]) {
                 // tsumo
@@ -311,26 +337,27 @@ const VueApp = {
             this.nextround(finalres, !this.agaricolor[oya], true, this.settings.agariposition);
         },
         cancelclick() {
-            let lastdata = this.logs.splice(this.logs.length - 1)[0];
+            let currentdata = this.logs.splice(this.logs.length - 1)[0];
+            let lastdata = this.logs.slice(this.logs.length - 1)[0];
             lastdata = JSON.parse(lastdata);
             for (let i in lastdata)
                 if (i != 'logs' && i != 'settings')
                     this[i] = lastdata[i];
+            localStorage.setItem('logs', JSON.stringify(this.logs));
         },
         startnew() {
-            this.savetable();
             this.initgame();
             this.started = true;
+            this.savetable();
         },
         endmatch() {
-            this.savetable();
             let results = [];
             for (let i = 0; i < this.players.length; i ++ ) {
                 let rank = 0;
                 for (let j = 0; j < this.players.length; j ++ )
                     rank += this.players[j].score > this.players[i].score || this.players[j].score == this.players[i].score && j < i;
                 this.players[i].score += rank == 0 ? this.kyoutaku * this.settings.reachcost : 0;
-                results.push((this.players[i].score - this.settings.initscore) / 1000 + this.settings.uma[rank]);
+                results.push((this.players[i].score - this.settings.backscore) / 1000 + this.settings.uma[rank]);
             }
             this.settings.roundresults = results;
             this.settings.showfinalresults = true;
@@ -339,6 +366,10 @@ const VueApp = {
         gendices() {
             this.settings.dices[0] = parseInt(Math.random() * 6 + 1);
             this.settings.dices[1] = parseInt(Math.random() * 6 + 1);
+        },
+        resetsettingsclick() {
+            this.settings = JSON.parse(JSON.stringify(default_settings));
+            this.settings.showsettings = true;
         }
     },
     computed: {
@@ -371,7 +402,8 @@ const VueApp = {
     }
 }
 
-Vue.createApp(VueApp).mount('#maindiv');
+let app = Vue.createApp(VueApp).mount('#maindiv');
+if (app.logs.length == 0) app.savetable();
 
 let center_div_size = VueApp.data().settings.centersize;
 let fullpx = VueApp.data().settings.fullpx;
