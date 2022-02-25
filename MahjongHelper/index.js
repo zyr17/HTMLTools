@@ -404,6 +404,8 @@ const VueApp = {
 
 let app = Vue.createApp(VueApp).mount('#maindiv');
 if (app.logs.length == 0) app.savetable();
+app.savetable();
+app.cancelclick();
 
 let center_div_size = VueApp.data().settings.centersize;
 let fullpx = VueApp.data().settings.fullpx;
