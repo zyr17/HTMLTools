@@ -196,7 +196,7 @@ const VueApp = {
         resultfontcolor(res) { 
             if (res < 0) return 'redfont';
             if (res > 0) return 'greenfont';
-            if (!this.settings.showroundresultszero) return 'blackfont';
+            if (!this.settings.showroundresultszero && !this.settings.showfinalresults) return 'blackfont';
             return 'whitefont';
         },
         ryuukyokuclick(index, value) {
