@@ -78,10 +78,7 @@ svg {
 #settingsdiv input {
     max-width: 60%;
 }
-#settingsdiv #reachhonbabacksettings input {
-    max-width: 10%;
-}
-#settingsdiv #startsettings, #settingsdiv #umasettings, #settingsdiv #reachhonbabacksettings {
+#settingsdiv .settings4inputs, #settingsdiv .settings3inputs, #settingsdiv #reachhonbabacksettings {
     display: flex;
     justify-content: space-around;
     text-align: center;
@@ -95,15 +92,20 @@ svg {
     align-items: center;
     width: 100%;
 }
-#settingsdiv #startsettings > div, #settingsdiv #umasettings > div, #settingsdiv #reachhonbabacksettings > div {
+#settingsdiv .settingsinput, #settingsdiv #reachhonbabacksettings > div {
     display: flex;
     justify-content: space-around;
     text-align: center;
     align-items: center;
     position: relative;
+}
+#settingsdiv .settings4inputs > * {
     max-width: 20%;
 }
-#settingsdiv #startsettings > div > *, #settingsdiv #umasettings > div > * {
+#settingsdiv .settings3inputs > * {
+    max-width: 30%;
+}
+.settingsinput > * {
     position: relative;
 }
 

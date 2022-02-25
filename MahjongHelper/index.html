@@ -18,27 +18,47 @@
         <div id="maindiv">
             <div v-show="settings.showsettings" id="settingsdiv" class="coverall">
                 <div class="hint" :style="'visibility: ' + (settings.showhint ? 'visible' : 'hidden')">警告：局中修改，错误数值可能导致未知异常！</div>
-                <div style="font-size: 200%;">初始点：</div>
-                <div id="startsettings">
-                    <div v-for="(data, index) in settings.initscore">
+                <div style="font-size: 150%;">初始点：</div>
+                <div id="startsettings" class="settings4inputs">
+                    <div v-for="(data, index) in settings.initscore" class="settingsinput">
                         <div>{{ settings.kazename[index] }}</div>
                         <input v-model.number="settings.initscore[index]">
                     </div>
                 </div>
-                <div style="font-size: 200%;">马点：</div>
-                <div id="umasettings">
-                    <div v-for="(data, index) in settings.uma">
-                        <div>{{ index }}位</div>
+                <div style="font-size: 150%;">马点：</div>
+                <div id="umasettings" class="settings4inputs">
+                    <div v-for="(data, index) in settings.uma" class="settingsinput">
+                        <div>{{ index + 1 }}位</div>
                         <input v-model.number="settings.uma[index]">
                     </div>
                 </div>
-                <div id="reachhonbabacksettings">
-                    <div>返点</div>
-                    <input v-model.number="settings.backscore">
-                    <div>立直需点</div>
-                    <input v-model.number="settings.reachcost">
-                    <div>本场增点</div>
-                    <input v-model.number="settings.honbacost">
+                <div style="font-size: 150%;">流局听牌得点：</div>
+                <div id="tenpaigetssettings" class="settings3inputs">
+                    <div v-for="index in [1, 2, 3]" class="settingsinput">
+                        <div>{{ index }}人</div>
+                        <input v-model.number="settings.tenpaigets[index]">
+                    </div>
+                </div>
+                <div style="font-size: 150%;">流局没听失点：</div>
+                <div id="tenpaigivessettings" class="settings3inputs">
+                    <div v-for="index in [1, 2, 3]" class="settingsinput">
+                        <div>{{ index }}人</div>
+                        <input v-model.number="settings.tenpaigives[index]">
+                    </div>
+                </div>
+                <div id="reachhonbabacksettings" class="settings3inputs">
+                    <div class="settingsinput">
+                        <div>返点</div>
+                        <input v-model.number="settings.backscore">
+                    </div>
+                    <div class="settingsinput">
+                        <div>立直需点</div>
+                        <input v-model.number="settings.reachcost">
+                    </div>
+                    <div class="settingsinput">
+                        <div>本场增点</div>
+                        <input v-model.number="settings.honbacost">
+                    </div>
                 </div>
                 <div id="hinthistorysettings">
                     <input type="checkbox" id="showhintckbx" v-model="settings.showhint">

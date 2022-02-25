@@ -51,6 +51,8 @@ let default_settings = {
     backscore: 25000,
     uma: [15, 5, -5, -15],
     historylength: 1000,
+    tenpaigets: [0, 3000, 1500, 1000, 0],
+    tenpaigives: [0, 3000, 1500, 1000, 0],
 
     // popup variables
     roundresults: [0, 0, 0, 0],
@@ -207,8 +209,6 @@ const VueApp = {
             this.settings.showtenpaiconfirm = decided == this.players.length;
         },
         tenpaiconfirm() {
-            let gets = [0, 3000, 1500, 1000, 0];
-            let gives = [0, -3000, -1500, -1000, 0];
             let getc = 0, givec = 0;
             let nextkyoku = !(this.players[this.kyoku].tenpai == 1);
             for (let i = 0; i < this.players.length; i ++ ) {
@@ -219,8 +219,8 @@ const VueApp = {
             let res = [];
             for (let i = 0; i < this.players.length; i ++ ) {
                 let t = this.players[i].tenpai;
-                if (t == 1) res.push(gets[getc]);
-                if (t == 0) res.push(gives[givec]);
+                if (t == 1) res.push(this.settings.tenpaigets[getc]);
+                if (t == 0) res.push(- this.settings.tenpaigives[givec]);
                 this.players[i].tenpai = -1;
             }
             this.settings.showroundresultszero = true;
