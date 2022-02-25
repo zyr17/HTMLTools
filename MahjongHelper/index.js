@@ -52,7 +52,7 @@ let default_settings = {
     uma: [15, 5, -5, -15],
     historylength: 1000,
     tenpaigets: [0, 3000, 1500, 1000, 0],
-    tenpaigives: [0, 3000, 1500, 1000, 0],
+    tenpaigives: [0, 3000, 1500, -1000, 0],
 
     // popup variables
     roundresults: [0, 0, 0, 0],
@@ -86,7 +86,14 @@ catch {
     stored_settings = default_settings;
 }
 
-console.log(stored_logs, stored_settings);
+// console.log(stored_logs, stored_settings);
+function updatenonexistsettings(stored_settings, default_settings) {
+    for (let key in default_settings)
+        if (!stored_settings.hasOwnProperty(key))
+            stored_settings[key] = JSON.parse(JSON.stringify(default_settings[key]));
+    return stored_settings;
+}
+stored_settings = updatenonexistsettings(stored_settings, default_settings);
 
 const VueApp = {
     data() {
