@@ -5,6 +5,7 @@ function oneplayer(pos) {
     return {
         kaze: -1,
         score: -1,
+        deltascore: -1,
         agari: false,
         reach: false,
         tenpai: -1,
@@ -18,6 +19,7 @@ let default_settings = {
     centersize: 37.5,
     fullpx: 400,
     kazename: ['東', '南', '西', '北'],
+    numbername: ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十'],
     positionname: ['bottom', 'right', 'top', 'left'],
     hanlist: [
         ['没和'], 
@@ -346,6 +348,7 @@ const VueApp = {
             let finalres = [];
             for (let i = 0; i < res.length; i ++ )
                 finalres.push(res[(res.length + i - this.settings.agariposition) % res.length]);
+            this.settings.showroundresultszero = false;
             this.nextround(finalres, !this.agaricolor[oya], true, this.settings.agariposition);
         },
         cancelclick() {
@@ -392,6 +395,14 @@ const VueApp = {
         },
         manualpointclick() {
             this.nextround(this.settings.manualpoints, this.settings.manualnextkyoku, this.settings.manualkyoutaku, this.settings.manualkyoutakustart);
+        },
+        updatedeltascore(index) {
+            let baseline = this.players[index].score;
+            for (let i = 0; i < this.players.length; i ++ )
+                this.players[i].deltascore = baseline - this.players[i].score;
+            this.settings.deltascorebaseline = index;
+            this.settings.showroundresultszero = true;
+            setTimeout(() => { this.settings.showdeltascore = false; }, 2000);
         }
     },
     computed: {

@@ -131,19 +131,35 @@ svg {
     background-color: black;
 }
 #dicesdiv > #showdicesdiv {
-    width: 100%;
+    left: 15%;
+    width: 70%;
     height: 100%;
 }
 #dicesdiv > #showdicesdiv > div {
     position: relative;
-    width: 30%;
-    height: 30%;
+    width: 45%;
+    height: 45%;
 }
 #dicesdiv > .hint {
     position: absolute;
     width: 100%;
     top: 75%;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+#dicesdiv > .hint > * {
+    position: relative;
+    margin-bottom: 2%;
+}
+#dicesdiv .arrow {
+    width: 100%;
+    height: 100%;
+}
+#dicesdiv .arrow > svg {
+    width: 100%;
+    height: 15%;
 }
 
 #resultsdiv {
@@ -348,8 +364,11 @@ svg {
     z-index: 999;
     background-color: black;
 }
+#center .up button, #center .down button {
+    width: 45%;
+}
 #center #tenpaiconfirmdiv button {
-    height: auto
+    height: auto;
 }
 
 #center .up, #center .down, .hand .middle, .hand .down, .hand .kaze, .hand .score, #dicesdiv #showdicesdiv, #center #tenpaiconfirmdiv, #resultsdiv .hint, #cancelconfirm .yesnobtn, #cancelconfirm .hint {

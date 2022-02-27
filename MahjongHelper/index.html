@@ -68,7 +68,7 @@
                 </div>
                 <div>
                     <button @click="settings.showresetsettingsconfirm = true;">重置设置</button>
-                    <button @click="manualinit(); settings.showmanualpoint = true;" style="margin-left: 5%;">手动设置得点</button>
+                    <button @click="manualinit(); settings.showmanualpoint = true;" style="margin-left: 5%;" :disabled="!started">手动设置得点</button>
                 </div>
                 <div>
                     <button @click="settings.showsettings = false; savesettings();">关闭</button>
@@ -168,7 +168,7 @@
                     {{ res > 0 ? '+' : res < 0 ? '-' : '±' }}{{ Math.abs(res) }}
                 </div>
             </div>
-            <div v-if="settings.showdices" id="dicesdiv" @click="settings.showdices = false">
+            <div v-if="settings.showdices" id="dicesdiv" :class="settings.positionname[kyoku]" @click="settings.showdices = false">
                 <div id="showdicesdiv">
                     <div id="dice1div">
                         <svg v-if="settings.dices[0] == 1" class="dice1svg" t="1645538296085" class="icon" viewBox="0 0 1039 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2786"><path d="M15.013749 14.805946m156.735224 0l695.515803 0q156.735224 0 156.735224 156.735224l0 680.91766q0 156.735224-156.735224 156.735224l-695.515803 0q-156.735224 0-156.735224-156.735224l0-680.91766q0-156.735224 156.735224-156.735224Z" fill="#FFFFFF" p-id="2787"></path><path d="M867.264776 1016.986657H171.748973a164.683679 164.683679 0 0 1-164.527827-164.527827V171.437269A164.683679 164.683679 0 0 1 171.748973 7.013343h695.515803A164.683679 164.683679 0 0 1 1031.792603 171.437269v681.021561a164.683679 164.683679 0 0 1-164.527827 164.527827zM171.748973 22.598549A149.098473 149.098473 0 0 0 22.806352 171.437269v681.021561a149.098473 149.098473 0 0 0 148.942621 148.942621h695.515803a149.098473 149.098473 0 0 0 148.942621-148.942621V171.437269a149.098473 149.098473 0 0 0-148.942621-148.83872z" fill="#AAAAAA" p-id="2788"></path><path d="M519.506874 512.025975m-129.876718 0a129.876719 129.876719 0 1 0 259.753437 0 129.876719 129.876719 0 1 0-259.753437 0Z" fill="#FF0000" p-id="2789"></path></svg>
@@ -187,14 +187,21 @@
                         <svg v-if="settings.dices[1] == 6" class="dice6svg" t="1645538422111" class="icon" viewBox="0 0 1039 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4935"><path d="M15.013749 14.805946m156.735224 0l695.515803 0q156.735224 0 156.735224 156.735224l0 680.91766q0 156.735224-156.735224 156.735224l-695.515803 0q-156.735224 0-156.735224-156.735224l0-680.91766q0-156.735224 156.735224-156.735224Z" fill="#FFFFFF" p-id="4936"></path><path d="M867.264776 1016.986657H171.748973a164.683679 164.683679 0 0 1-164.527827-164.527827V171.437269A164.683679 164.683679 0 0 1 171.748973 7.013343h695.515803A164.683679 164.683679 0 0 1 1031.792603 171.437269v681.021561a164.683679 164.683679 0 0 1-164.527827 164.527827zM171.748973 22.598549A149.098473 149.098473 0 0 0 22.806352 171.437269v681.021561a149.098473 149.098473 0 0 0 148.942621 148.942621h695.515803a149.098473 149.098473 0 0 0 148.942621-148.942621V171.437269a149.098473 149.098473 0 0 0-148.942621-148.83872z" fill="#AAAAAA" p-id="4937"></path><path d="M291.183603 206.088377m-129.876719 0a129.876719 129.876719 0 1 0 259.753438 0 129.876719 129.876719 0 1 0-259.753438 0Z" p-id="4938"></path><path d="M747.830146 206.088377m-129.876719 0a129.876719 129.876719 0 1 0 259.753437 0 129.876719 129.876719 0 1 0-259.753437 0Z" p-id="4939"></path><path d="M291.183603 522.20831m-129.876719 0a129.876719 129.876719 0 1 0 259.753438 0 129.876719 129.876719 0 1 0-259.753438 0Z" p-id="4940"></path><path d="M747.830146 522.20831m-129.876719 0a129.876719 129.876719 0 1 0 259.753437 0 129.876719 129.876719 0 1 0-259.753437 0Z" p-id="4941"></path><path d="M291.183603 838.380194m-129.876719 0a129.876719 129.876719 0 1 0 259.753438 0 129.876719 129.876719 0 1 0-259.753438 0Z" p-id="4942"></path><path d="M747.830146 838.380194m-129.876719 0a129.876719 129.876719 0 1 0 259.753437 0 129.876719 129.876719 0 1 0-259.753437 0Z" p-id="4943"></path></svg>
                     </div>
                 </div>
-                <div class="hint">{{ settings.showhint ? '点击任意位置关闭' : '' }}</div>
+                <div class="hint">
+                    <div>{{ settings.showhint ? '点击任意位置关闭' : '' }}</div>
+                    <div v-show="started" style="font-size: 50%;">{{ settings.showhint ? '从箭头所指牌山逆时针留' + (settings.dices[0] + settings.dices[1]) + '墩开始摸牌' : '' }}</div>
+                </div>
+                <div v-show="started" class="arrow" :class="settings.positionname[(settings.dices[0] + settings.dices[1] + 1) % 4]">
+                    <svg t="1645971132806" class="icon" viewBox="256 256 768 512" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3207" width="200" height="200"><path d="M830.687738 603.071182c0 9.614985-3.933589 17.949814-11.799744 25.007557-7.867178 7.05672-17.222243 10.56052-28.065196 10.512425L232.716714 638.591163c-10.789741 0-20.144806-3.5038-28.064172-10.512425-7.919367-7.009647-11.852956-15.344476-11.799744-25.007557 0.053212-9.660011 3.986801-17.996886 11.799744-25.00551l279.05253-248.641917c7.867178-7.009647 17.22122-10.513448 28.065196-10.513448 10.842952 0 20.196994 3.504824 28.064172 10.513448l279.05253 248.641917C826.754149 585.074296 830.687738 593.411171 830.687738 603.071182z" p-id="3208" fill="#d81e06"></path></svg>
+                </div>
             </div>
             <div v-for="(player, index) in players" class="hand" :class="player.position" :index="index">
                 <div class="up">
-                    <div class="score">{{ player.score == -1 ? '' : player.score }}</div>
+                    <div v-show="!settings.showdeltascore || settings.deltascorebaseline == index" class="score" @click="settings.showdeltascore = true; updatedeltascore(index);">{{ player.score == -1 ? '' : player.score }}</div>
+                    <div v-show="started && settings.showdeltascore && settings.deltascorebaseline != index" class="score" :class="resultfontcolor(player.deltascore)" @click="settings.showdeltascore = false;">{{ player.deltascore > 0 ? '+' : player.deltascore < 0 ? '-' : '±' }}{{ Math.abs(player.deltascore) }}</div>
                 </div>
                 <div class="middle">
-                    <div class="kaze">{{ player.kaze == -1 ? '&emsp;' : settings.kazename[player.kaze] }}</div>
+                    <div class="kaze" :style="player.kaze == 0 ? 'font-weight: bold; font-color: black; background-color: red; border-radius: 20%; height: auto;' : ''">{{ player.kaze == -1 ? '&emsp;' : settings.kazename[player.kaze] }}</div>
                     <button class="reachbtn" @click="reachclick(index)" :disabled="player.reach || !started">立直</button>
                     <button class="agaribtn" @click="agariclick(index)" :disabled="!started">自摸/放铳</button>
                     <!-- <button v-if="player.tsumoorhoujyuu == ''" class="tsumohoujyuubtn" >自摸放铳</button> -->
@@ -216,7 +223,7 @@
                     <button @click="tenpaiconfirm">听牌结算</button>
                 </div>
                 <div id="bakaze">{{ settings.kazename[bakaze] }}</div>
-                <div id="kyoku">{{ kyoku == -1 ? '' : kyoku + 1 }}</div>
+                <div id="kyoku">{{ kyoku == -1 ? '' : settings.numbername[kyoku + 1] }}</div>
                 <div id="honbakyoutaku">
                     <div v-show="honba != -1" id="honbaicon">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500"> <g> <title>Layer 1</title> <rect stroke-width="10" transform="rotate(45, 249.5, 250)" id="svg_3" height="560" width="141" y="-30" x="179" stroke="#a0a0a0" fill="#ffffff"/> <ellipse ry="14" rx="14" id="svg_4" cy="250" cx="213" stroke-width="0" stroke="#a0a0a0" fill="#545a81"/> <ellipse ry="14" rx="14" id="svg_6" cy="250" cx="287" stroke-width="0" stroke="#a0a0a0" fill="#545a81"/> <ellipse ry="14" rx="14" id="svg_7" cy="287" cx="250" stroke-width="0" stroke="#a0a0a0" fill="#545a81"/> <ellipse ry="14" rx="14" id="svg_8" cy="213" cx="250" stroke-width="0" stroke="#a0a0a0" fill="#545a81"/> <ellipse ry="14" rx="14" id="svg_9" cy="287" cx="176" stroke-width="0" stroke="#a0a0a0" fill="#545a81"/> <ellipse ry="14" rx="14" id="svg_10" cy="324" cx="213" stroke-width="0" stroke="#a0a0a0" fill="#545a81"/> <ellipse ry="14" rx="14" id="svg_11" cy="176" cx="287" stroke-width="0" stroke="#a0a0a0" fill="#545a81"/> <ellipse ry="14" rx="14" id="svg_12" cy="213" cx="324" stroke-width="0" stroke="#a0a0a0" fill="#545a81"/> </g> </svg>
@@ -233,7 +240,9 @@
                     <button id="settings" @click="settings.showsettings = true;">设置</button>
                 </div>
                 <div class="down">
-                    <button id="dice" @click="gendices(); settings.showdices = true">骰子</button>
+                    <button id="dice" @click="gendices(); settings.showdices = true">
+                        <svg t="1645968165352" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4460" width="200" height="200"><path d="M869.12 225.792L596.48 68.4032c-39.6288-22.9376-108.0832-22.9376-147.712 0L176.2304 225.792C135.5264 249.2416 102.4 306.6368 102.4 353.6384v314.7264c0 47.0016 33.1264 104.448 73.8304 127.8464l272.5888 157.3888c19.8656 11.4176 45.9776 17.7664 73.8304 17.7664 27.8016 0 54.016-6.2464 73.8816-17.7664l272.5888-157.3888c40.704-23.4496 73.8304-80.8448 73.8304-127.8464V353.6384c0-47.0016-33.1264-104.448-73.8304-127.8464zM501.1968 874.0864c0 9.472-2.048 17.2544-5.7856 21.9136a13.3632 13.3632 0 0 1-11.2128 5.0176 40.192 40.192 0 0 1-19.0464-6.144L214.016 749.824c-29.44-16.9472-54.3232-60.0576-54.3232-94.0032V391.2704c0-8.1408 1.6384-26.9312 16.9472-26.9312 5.4784 0 12.032 2.1504 19.0464 6.144l251.1872 145.0496c29.3888 16.9472 54.272 60.0576 54.272 94.0032v264.5504z m21.3504-403.2c-20.5312 0-40.2944-4.608-54.272-12.6464L217.088 313.1904c-10.8032-6.2464-17.1008-13.7728-17.1008-20.7872 0-6.9632 6.1952-14.4896 17.1008-20.736l251.1872-145.0496c13.8752-8.0384 33.7408-12.6464 54.272-12.6464 20.5824 0 40.3456 4.608 54.3232 12.6464l251.1872 145.0496c10.752 6.2464 16.9472 13.7728 16.9472 20.736 0 7.0144-6.144 14.5408-16.9472 20.7872L576.8704 458.24c-13.9776 8.0384-33.7408 12.6464-54.272 12.6464z m359.7312 184.832c0 33.9456-24.8832 77.056-54.3232 94.0032L604.672 879.104l-19.0464 6.144c-15.36 0-16.9984-18.7904-16.9984-26.88V593.92c0-33.9456 24.9344-77.056 54.3232-94.0544l223.3344-129.3824a40.192 40.192 0 0 1 18.9952-6.144c15.36 0 16.9984 18.7904 16.9984 26.9312v264.448z" fill="#0A0A0A" p-id="4461"></path><path d="M242.7904 468.8384c-19.456 0-35.2768 21.1968-35.2768 47.2064s15.872 47.2064 35.328 47.2064c19.4048 0 35.2256-21.1968 35.2256-47.2064s-15.872-47.2064-35.2768-47.2064z m0 160.4608c-19.456 0-35.2768 21.1968-35.2768 47.2064s15.872 47.2064 35.328 47.2064c19.4048 0 35.2256-21.1968 35.2256-47.2064s-15.872-47.2064-35.2768-47.2064z m135.68 68.3008c-19.456 0-35.328 21.1456-35.328 47.2064 0 26.0096 15.872 47.2064 35.328 47.2064 19.456 0 35.2768-21.1968 35.2768-47.2064 0-26.0608-15.872-47.2064-35.2768-47.2064z m304.128-143.2064c-19.456 0-35.2768 21.1968-35.2768 47.2064 0 26.0608 15.872 47.2064 35.328 47.2064 19.456 0 35.2256-21.1456 35.2256-47.2064 0-26.0096-15.7184-47.2064-35.2768-47.2064z m113.3568 50.6368c-19.456 0-35.2768 21.1456-35.2768 47.2064 0 26.0096 15.872 47.2064 35.328 47.2064 19.4048 0 35.2256-21.1968 35.2256-47.2064 0-26.0608-15.7184-47.2064-35.2768-47.2064z m-274.8416-350.1568c-28.5696 0-51.8144 15.872-51.8144 35.328 0 19.4048 23.2448 35.2256 51.8144 35.2256 28.6208 0 51.8656-15.872 51.8656-35.2768 0-19.456-23.2448-35.2768-51.8656-35.2768z m-130.6112 285.3376c-19.456 0-35.328 21.1968-35.328 47.2064s15.872 47.2064 35.328 47.2064c9.8816 0 19.3536-5.5296 26.0096-15.36 5.9904-8.704 9.2672-19.968 9.2672-31.744 0-26.112-15.872-47.3088-35.2768-47.3088z" fill="#0A0A0A" p-id="4462"></path></svg>
+                    </button>
                     <button id="cancel" @click="settings.showcancelconfirm = true;" :disabled="logs.length <= 1">撤销</button>
                     <div v-show="settings.showcancelconfirm" id="cancelconfirm" style="height: 100%; width: 100%;">
                         <div class="coverall" >确认撤销？</div>
