@@ -68,6 +68,7 @@
                 </div>
                 <div>
                     <button @click="settings.showresetsettingsconfirm = true;">重置设置</button>
+                    <button @click="manualinit(); settings.showmanualpoint = true;" style="margin-left: 5%;">手动设置得点</button>
                 </div>
                 <div>
                     <button @click="settings.showsettings = false; savesettings();">关闭</button>
@@ -77,6 +78,50 @@
                     <div class="yesnobtn" style="z-index: 1999; width: 100%; height: 50%; top: 50%; display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap;">
                         <button id="resetsettingsyes" style="color: red; font-weight: bold; height: auto" @click="settings.showresetsettingsconfirm = false; resetsettingsclick();">确认</button>
                         <button id="resetsettingsno" style="height: auto" @click="settings.showresetsettingsconfirm = false;">取消</button>
+                    </div>
+                </div>
+                <div v-show="settings.showmanualpoint" id="manualpoint" style="height: 100%; width: 100%; font-size: 200%;">
+                    <div class="coverall" >
+                        <div style="font-size: 200%;">手动设置得点</div>
+                        <div id="manualpoints" class="settings4inputs">
+                            <div v-for="(data, index) in settings.manualpoints" class="settingsinput">
+                                <div>{{ settings.kazename[index] }}</div>
+                                <input v-model.number="settings.manualpoints[index]">
+                            </div>
+                        </div>
+                        <div style="font-size: 150%;">是否继续连庄</div>
+                        <div id="manualnextkyoku">
+                            <div>
+                                <input type="radio" id="notmanualnextkyokuckbx" v-model="settings.manualnextkyoku" :value="false">
+                                <label for="notmanualnextkyokuckbx">连庄</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="manualnextkyokuckbx" v-model="settings.manualnextkyoku" :value="true">
+                                <label for="manualnextkyokuckbx">过庄</label>
+                            </div>
+                        </div>
+                        <div style="font-size: 150%;">是否结算场棒供托</div>
+                        <div id="manualkyoutaku">
+                            <div>
+                                <input type="radio" id="manualkyoutakuradio" v-model="settings.manualkyoutaku" :value="true">
+                                <label for="manualkyoutakuradio">结算</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="notmanualkyoutakuradio" v-model="settings.manualkyoutaku" :value="false">
+                                <label for="notmanualkyoutakuradio">不结算</label>
+                            </div>
+                        </div>
+                        <div style="font-size: 150%;">供托结算起家</div>
+                        <div id="manualkyoutakustart">
+                            <div v-for="index in [0, 1, 2, 3]">
+                                <input :id="'manualkyoutakustart' + index" type="radio" v-model="settings.manualkyoutakustart" :value="index" :disabled="!settings.manualkyoutaku">
+                                <label :for="'manualkyoutakustart' + index">{{ settings.kazename[index] }}</label>
+                            </div>
+                        </div>
+                        <div class="yesnobtn" style="width: 100%; display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap;">
+                            <button id="resetsettingsyes" style="height: auto" @click="settings.showsettings = settings.showmanualpoint = false; manualpointclick();">确认</button>
+                            <button id="resetsettingsno" style="height: auto" @click="settings.showmanualpoint = false;">取消</button>
+                        </div>
                     </div>
                 </div>
 

@@ -52,7 +52,8 @@ let default_settings = {
     uma: [15, 5, -5, -15],
     historylength: 1000,
     tenpaigets: [0, 3000, 1500, 1000, 0],
-    tenpaigives: [0, 3000, 1500, -1000, 0],
+    tenpaigives: [0, 3000, 1500, 1000, 0],
+    showhint: true,
 
     // popup variables
     roundresults: [0, 0, 0, 0],
@@ -60,6 +61,10 @@ let default_settings = {
     agariposition: 0,
     agarihaninfo: [ [0, 0], [0, 0], [0, 0], [0, 0] ],
     agarifuinfo: [ [0, 0], [0, 0], [0, 0], [0, 0] ],
+    manualpoints: [0, 0, 0, 0],
+    manualnextkyoku: false,
+    manualkyoutaku: true,
+    manualkyoutakustart: 0,
 
     // popup switchs
     showroundresultszero: false,
@@ -71,7 +76,7 @@ let default_settings = {
     showagari: false,
     showresetsettingsconfirm: false,
     showsettings: false,
-    showhint: true,
+    showmanualpoint: false,
 }
 
 let stored_logs = localStorage.getItem('logs');
@@ -377,6 +382,16 @@ const VueApp = {
         resetsettingsclick() {
             this.settings = JSON.parse(JSON.stringify(default_settings));
             this.settings.showsettings = true;
+        },
+        manualinit() {
+            for (let i = 0; i < this.settings.manualpoints.length; i ++ )
+                this.settings.manualpoints[i] = 0;
+            this.settings.manualkyoutaku = true;
+            this.settings.manualkyoutakustart = 0;
+            this.settings.manualnextkyoku = false;
+        },
+        manualpointclick() {
+            this.nextround(this.settings.manualpoints, this.settings.manualnextkyoku, this.settings.manualkyoutaku, this.settings.manualkyoutakustart);
         }
     },
     computed: {
@@ -410,6 +425,7 @@ const VueApp = {
 }
 
 let app = Vue.createApp(VueApp).mount('#maindiv');
+console.log(app);
 if (app.logs.length == 0) app.savetable();
 app.savetable();
 app.cancelclick();
