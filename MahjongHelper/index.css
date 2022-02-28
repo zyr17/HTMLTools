@@ -15,6 +15,44 @@ button {
     font-size: 90%;
     height: 90%;
 }
+/* bootstrap button-default css */
+button:disabled {
+    background-color: #484848;
+    color: #373737;
+    border-color: #484848;
+    cursor: default;
+}
+button:enabled:hover {
+    background-color: #e6e6e6;
+    border-color: #adadad;
+}
+button:enabled:active {
+    background-color: #e6e6e6;
+    border-color: #adadad;
+    background-image: none;
+    outline: 0;
+    -webkit-box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+    box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+}
+button {
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    line-height: 1.42857143;
+    border-radius: 4px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: #fff;
+    border-color: #ccc;
+}
+/* bootstrap button css */
 div{
     position: absolute;
     /* border: 0.1px solid #0000FF; */
