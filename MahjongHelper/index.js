@@ -81,8 +81,17 @@ let default_settings = {
     showmanualpoint: false,
 }
 
-let stored_logs = localStorage.getItem('logs');
-let stored_settings = localStorage.getItem('settings');
+let stored_logs = null;
+let stored_settings = null;
+let have_localstorage = true;
+try {
+    stored_logs = localStorage.getItem('logs');
+    stored_settings = localStorage.getItem('settings');
+}
+catch {
+    window.alert('读取localStorage失败！将无法保存历史记录和设置信息，网页重启后历史记录和设置信息将丢失！请检查是否启用了隐私浏览等方式。');
+    have_localstorage = false;
+}
 try {
     stored_logs = stored_logs === null ? [] : JSON.parse(stored_logs);
     stored_settings = stored_settings === null ? JSON.parse(JSON.stringify(default_settings)) : JSON.parse(stored_settings);
@@ -128,10 +137,10 @@ const VueApp = {
             this.logs.push(JSON.stringify(currentdata));
             if (this.logs.length > this.settings.historylength)
                 this.logs.splice(0, this.logs.length - this.settings.historylength);
-            localStorage.setItem('logs', JSON.stringify(this.logs));
+            if (have_localstorage) localStorage.setItem('logs', JSON.stringify(this.logs));
         },
         savesettings() {
-            localStorage.setItem('settings', JSON.stringify(this.settings));
+            if (have_localstorage) localStorage.setItem('settings', JSON.stringify(this.settings));
         },
         cleartable() {
             for (let i = 0; i < this.players.length; i ++ )
@@ -358,7 +367,7 @@ const VueApp = {
             for (let i in lastdata)
                 if (i != 'logs' && i != 'settings')
                     this[i] = lastdata[i];
-            localStorage.setItem('logs', JSON.stringify(this.logs));
+            if (have_localstorage) localStorage.setItem('logs', JSON.stringify(this.logs));
         },
         startnew() {
             this.initgame();
