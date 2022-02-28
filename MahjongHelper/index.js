@@ -524,4 +524,8 @@ window.onload = changesize;
 
 window.onresize = function(){
     changesize();
+    let useragent = navigator.userAgent;
+    if (useragent.indexOf('iPad') > -1 || useragent.indexOf('iPhone') > -1) {
+        window.alert('iOS设备推荐使用Chrome或Edge。如果使用iOS设备出现按钮显示位置错乱，请尝试锁屏再解锁，可能可以恢复正常显示。')
+    }
 };
