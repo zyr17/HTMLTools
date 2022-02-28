@@ -182,7 +182,7 @@ svg {
 #dicesdiv > .hint {
     position: absolute;
     width: 100%;
-    top: 75%;
+    top: 65%;
     text-align: center;
     display: flex;
     flex-direction: column;
