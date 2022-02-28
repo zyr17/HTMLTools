@@ -201,7 +201,7 @@
                     <div v-show="started && settings.showdeltascore && settings.deltascorebaseline != index" class="score" :class="resultfontcolor(player.deltascore)" @click="settings.showdeltascore = false;">{{ player.deltascore > 0 ? '+' : player.deltascore < 0 ? '-' : '±' }}{{ Math.abs(player.deltascore) }}</div>
                 </div>
                 <div class="middle">
-                    <div class="kaze" :style="player.kaze == 0 ? 'font-weight: bold; font-color: black; background-color: red; border-radius: 20%; height: auto;' : ''">{{ player.kaze == -1 ? '&emsp;' : settings.kazename[player.kaze] }}</div>
+                    <div class="kaze" :style="player.kaze == 0 ? 'font-weight: bold; font-color: black; background-color: red; border-radius: 20%;' : ''">{{ player.kaze == -1 ? '&emsp;' : settings.kazename[player.kaze] }}</div>
                     <button class="reachbtn" @click="reachclick(index)" :disabled="player.reach || !started">立直</button>
                     <button class="agaribtn" @click="agariclick(index)" :disabled="!started">自摸/放铳</button>
                     <!-- <button v-if="player.tsumoorhoujyuu == ''" class="tsumohoujyuubtn" >自摸放铳</button> -->

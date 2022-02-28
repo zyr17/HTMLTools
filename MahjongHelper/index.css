@@ -328,7 +328,8 @@ svg {
     position: relative;
 }
 .hand .kaze {
-    height: 100%;
+    height: 32px;
+    width: 32px;
     font-size: 100%;
 }
 .hand .score {
