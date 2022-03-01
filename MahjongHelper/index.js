@@ -270,7 +270,7 @@ const VueApp = {
                 let one = { text: 0, style: '' };
                 if (this.settings.agarihaninfo[pindex][0] == i) {
                     one.text = this.settings.agarihaninfo[pindex][1];
-                    one.style = 'color: green; font-weight: bold;'
+                    one.style = 'background-color: #5cb85c; border-color: #4cae4c; font-weight: bold;'
                 }
                 one.text = this.settings.hanlist[i][one.text];
                 res.push(one);
@@ -283,7 +283,7 @@ const VueApp = {
                 let one = { text: 0, style: '' };
                 if (this.settings.agarifuinfo[pindex][0] == i) {
                     one.text = this.settings.agarifuinfo[pindex][1];
-                    one.style = 'color: green; font-weight: bold;'
+                    one.style = 'background-color: #5cb85c; border-color: #4cae4c; font-weight: bold;'
                 }
                 one.text = this.settings.fulist[i][one.text];
                 res.push(one);

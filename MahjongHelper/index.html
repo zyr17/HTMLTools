@@ -152,11 +152,11 @@
                             <button v-for="(data, index) in agarihanbtndata(pindex)" :style="data.style" :index="index" @click="agarihanclick(pindex, index)">{{ data.text }}</button>
                         </div>
                         <div class="fudiv">
-                            <button v-for="(data, index) in agarifubtndata(pindex)" :style="data.style" :disabled="settings.agarihaninfo[pindex][0] != 1" :index="index" @click="agarifuclick(pindex, index)">{{ data.text }}</button>
+                            <button v-for="(data, index) in agarifubtndata(pindex)" :style="settings.agarihaninfo[pindex][0] != 1 ? '' : data.style" :disabled="settings.agarihaninfo[pindex][0] != 1" :index="index" @click="agarifuclick(pindex, index)">{{ data.text }}</button>
                         </div>
                     </div>
                     <div class="down">
-                        <div v-show="settings.showhint" class="hint">部分按钮可点击改变</div>
+                        <div v-show="settings.showhint" class="hint">多次点击按钮可改变番和符</div>
                         <!-- <div class="handiv"></div> -->
                         <!-- <div class="fudiv"></div> -->
                     </div>
