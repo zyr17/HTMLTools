@@ -79,6 +79,7 @@ let default_settings = {
     showresetsettingsconfirm: false,
     showsettings: false,
     showmanualpoint: false,
+    playaudio: true,
 }
 
 let stored_logs = null;
@@ -255,6 +256,7 @@ const VueApp = {
             this.players[index].score -= this.settings.reachcost;
             this.kyoutaku ++ ;
             this.savetable();
+            if (this.settings.playaudio) document.getElementById('reachaudio').play();
         },
         agariclick(index) {
             this.settings.agariposition = index;
@@ -339,11 +341,14 @@ const VueApp = {
                     res[0] += res[i];
                     res[i] = - res[i];
                 }
+                if (this.settings.playaudio) document.getElementById('tsumoaudio').play();
             }
             else {
+                let roncount = 0;
                 for (let i = 1; i < this.players.length; i ++ )
                     if (this.agaricolor[i]) {
                         // ron
+                        roncount ++ ;
                         let base = basepoint(this.settings.hanpoint[this.settings.agarihaninfo[i][0]][this.settings.agarihaninfo[i][1]], 
                                              this.settings.fulist[this.settings.agarifuinfo[i][0]][this.settings.agarifuinfo[i][1]]);
                         if (oya == i) res.push(6 * base);
@@ -353,6 +358,11 @@ const VueApp = {
                 res = upper(res);
                 for (let i = 1; i < res.length; i ++ )
                     res[0] += - res[i];
+                if (this.settings.playaudio) {
+                    document.getElementById('ronaudio').play();
+                    if (roncount > 1)
+                        setTimeout(() => { document.getElementById('doubleronaudio').play(); }, 30);
+                }
             }
             let finalres = [];
             for (let i = 0; i < res.length; i ++ )
@@ -373,6 +383,7 @@ const VueApp = {
             this.initgame();
             this.started = true;
             this.savetable();
+            if (this.settings.playaudio) document.getElementById('matchstartaudio').play();
         },
         endmatch() {
             let results = [];
